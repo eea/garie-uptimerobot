@@ -1,0 +1,33 @@
+{
+    "name": "garie-uptimerobot",
+    "version": "0.0.1",
+    "description": "Garie plugin for uptimerobot",
+    "license": "MIT",
+    "repository": "eea/garie-uptimerobot",
+    "author": {
+        "name": "Zoltan Szabo",
+        "email": "zoltan.szabo@eaudeweb.ro"
+    },
+    "engines": {
+        "node": ">=6"
+    },
+    "scripts": {
+        "test": "ENV=test jest --coverage --config jest.config.json",
+        "test:watch": "ENV=test jest --watch --notify --notifyMode=change --coverage --config jest.config.json",
+        "start": "node ./src/index.js"
+    },
+    "files": [
+        "index.js"
+    ],
+    "keywords": [
+        ""
+    ],
+    "dependencies": {
+        "garie-plugin": "https://github.com/eea/garie-plugin",
+	"cron-parser": "2.7.3",
+	"dateformat": "*",
+        "request": "^2.88.0",
+        "request-promise": "^4.2.2",
+	"fs-extra": "^7.0.0"
+    }
+}
