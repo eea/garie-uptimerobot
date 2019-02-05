@@ -40,12 +40,14 @@ return new Promise(async (resolve, reject) => {
     const uptime_monitor_url = process.env.UPTIME_API_URL;
 
     date = new Date();
-    const resultsLocation = path.join(__dirname, '../../reports/', dateFormat(date, "isoUtcDateTime"),'/monitors.json');
+    const resultsLocation = path.join(__dirname, '../reports/', dateFormat(date, "isoUtcDateTime"),'/monitors.json');
 
     var monitors = {};
 
-    keys.split(' ').forEach(function(key) {
-
+    var tmp_keys = keys.split(' ');
+//.forEach(function(key) {
+    for (var i = 0; i < tmp_keys.length; i++){
+        var key = tmp_keys[i];
            data = await request({  
 		    method: 'POST',
                     uri: uptime_monitor_url,
@@ -62,25 +64,29 @@ return new Promise(async (resolve, reject) => {
              });
 
     // Handle the response
-              console.log(data);
+//              console.log(data);
               monitors = data['body']['monitors'].concat(monitors);
-    });
-
+//    });
+    }
+//console.log (monitors);
       fs.outputJson(resultsLocation, monitors)
-            .then(() => logger.info(`Saved matomo data file for ${urlNoProtocol}`))
+            .then(() => console.log(`Saved uptimerobot`))
             .catch(err => {
-              logger.warn(err)
+              console.log(err)
        })
 
 
 
-resolve(monitors);
+    resolve(monitors);
     } catch (err) {
-	    console.log(err);
+    console.log(err);
         reject("reject");
     }
 
-}	
+});
+}
+
+const monitors = getMonitors();
 
 const getData = async(options) => {
     const { url } = options.url_settings;
@@ -88,7 +94,7 @@ const getData = async(options) => {
 	var result = {}
         
         return new Promise(async (resolve, reject) => {
-
+              
 	      monitors.foreach(function(monitor){
 
                if (monitor['url'] == url) {
@@ -109,6 +115,6 @@ const getData = async(options) => {
 console.log("Start");
 
 
-const monitors = await getMonitors();
+
 
 garie_plugin.init({getData:getData, app_name:'uptimerobot', app_root: path.join(__dirname, '..'), config:config});
