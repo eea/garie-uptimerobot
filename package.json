@@ -24,7 +24,6 @@
     ],
     "dependencies": {
         "garie-plugin": "https://github.com/eea/garie-plugin",
-	"cron-parser": "2.7.3",
 	"dateformat": "*",
         "request": "^2.88.0",
         "request-promise": "^4.2.2",
