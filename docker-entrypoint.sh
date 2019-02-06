@@ -8,11 +8,17 @@ if [ -z "$UPTIME_ROBOT_KEYS" ]; then
 fi
 
 
-if [ -z "$UPTIME_ROBOT_KEYS" ]; then
+if [ -z "$UPTIME_API_URL" ]; then
         echo "UPTIME_API_URL not found, setting it to default: https://api.uptimerobot.com/v2/getMonitors"
-	UPTIME_API_URL=https://api.uptimerobot.com/v2/getMonitors
+	export UPTIME_API_URL=https://api.uptimerobot.com/v2/getMonitors
 fi
 
+
+
+if [ -z "$UPTIME_INTERVAL_DAYS" ]; then
+        echo "UPTIME_INTERVAL_DAYS not found, setting it to default: 30"
+        export UPTIME_INTERVAL_DAYS=30
+fi
 
 
 if [ -n "$CONFIG" ]; then

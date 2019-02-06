@@ -1,5 +1,4 @@
 
-const parser = require('cron-parser');
 const garie_plugin = require('garie-plugin');
 const path = require('path');
 const fs = require('fs-extra');
@@ -33,8 +32,9 @@ return new Promise(async (resolve, reject) => {
     try {
     var date = new Date();
     date.setHours(0,0,0,0);
-    var end_interval = date.getTime();
-    var start_interval = end_interval - 86400;
+    var end_interval = date.getTime()/1000|0 ;
+    var start_interval = end_interval - 86400*parseInt(process.env.UPTIME_INTERVAL_DAYS);
+    
 
     const keys = process.env.UPTIME_ROBOT_KEYS;
     const uptime_monitor_url = process.env.UPTIME_API_URL;
@@ -42,10 +42,12 @@ return new Promise(async (resolve, reject) => {
     date = new Date();
     const resultsLocation = path.join(__dirname, '../reports/', dateFormat(date, "isoUtcDateTime"),'/monitors.json');
 
+    console.log(`${start_interval}_${end_interval}`);
+    
+
     var monitors = {};
 
     var tmp_keys = keys.split(' ');
-//.forEach(function(key) {
     for (var i = 0; i < tmp_keys.length; i++){
         var key = tmp_keys[i];
            data = await request({  
@@ -63,12 +65,8 @@ return new Promise(async (resolve, reject) => {
                     }
              });
 
-    // Handle the response
-//              console.log(data);
               monitors = data['body']['monitors'].concat(monitors);
-//    });
     }
-//console.log (monitors);
       fs.outputJson(resultsLocation, monitors)
             .then(() => console.log(`Saved uptimerobot`))
             .catch(err => {
@@ -94,7 +92,7 @@ const getData = async(options) => {
 	var result = {}
         
         return new Promise(async (resolve, reject) => {
-              console.log(GLOBAL.monitors)
+            // console.log(GLOBAL.monitors)
 
               for (var i = 0; i < GLOBAL.monitors.length; i++){
 //	      GLOBAL.monitors.foreach(function(monitor){
