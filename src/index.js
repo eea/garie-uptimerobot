@@ -86,7 +86,7 @@ return new Promise(async (resolve, reject) => {
 });
 }
 
-const monitors = getMonitors();
+
 
 const getData = async(options) => {
     const { url } = options.url_settings;
@@ -94,17 +94,19 @@ const getData = async(options) => {
 	var result = {}
         
         return new Promise(async (resolve, reject) => {
-              
-	      monitors.foreach(function(monitor){
+              console.log(GLOBAL.monitors)
 
+              for (var i = 0; i < GLOBAL.monitors.length; i++){
+//	      GLOBAL.monitors.foreach(function(monitor){
+                var monitor = GLOBAL.monitors[i];
                if (monitor['url'] == url) {
 
                     result['uptime']=monitor['custom_uptime_ranges'];
                     console.log(`Got result ${monitor['custom_uptime_ranges']} for ${url}`);
                }
 
-            });
-
+              }
+    
          resolve(result);
 	   
 	  // custom code for getting the data for a url
@@ -116,5 +118,12 @@ console.log("Start");
 
 
 
+const main = async() => {
 
-garie_plugin.init({getData:getData, app_name:'uptimerobot', app_root: path.join(__dirname, '..'), config:config});
+GLOBAL.monitors = await getMonitors();
+//console.log(monitors);
+garie_plugin.init({database:"uptimerobot", getData:getData, app_name:'uptimerobot', app_root: path.join(__dirname, '..'), config:config});
+
+}
+
+main();
