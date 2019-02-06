@@ -18,6 +18,8 @@ services:
             - UPTIME_INTERVAL_DAYS=${UPTIME_INTERVAL_DAYS}
         depends_on:
             - influxdb
+        ports:
+            - 3000:3000
         volumes:
             - ./src:/usr/src/garie-uptimerobot/src
         command: bash -c "tail -f /dev/null"

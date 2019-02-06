@@ -4,6 +4,10 @@ const fs = require('fs-extra');
 const dateFormat = require('dateformat');
 const config = require('../config');
 const request = require('request-promise');
+const express = require('express');
+const bodyParser = require('body-parser');
+const serveIndex = require('serve-index');
+
 
 function getResults(file) {
 
@@ -112,6 +116,8 @@ const getData = async (options) => {
 console.log("Start");
 
 
+const app = express();
+app.use('/reports', express.static('reports'), serveIndex('reports', { icons: true }));
 
 const main = async () => {
 
@@ -126,4 +132,9 @@ const main = async () => {
 
 }
 
-main();
+if (process.env.ENV !== 'test') {
+  app.listen(3000, async () => {
+    console.log('Application listening on port 3000');
+    await main();
+  });
+}
