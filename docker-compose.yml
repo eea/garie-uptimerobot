@@ -9,7 +9,7 @@ services:
             - INFLUXDB_ADMIN_PASSWORD=admin
 
     garie-plugin:
-        build: .
+        image: garie-plugin 
         environment:
             - HOST=influxdb
             - UPTIME_ROBOT_KEYS=${UPTIME_ROBOT_KEYS}
@@ -19,7 +19,6 @@ services:
             - influxdb
         volumes:
             - ./src:/usr/src/garie-uptimerobot/src
-        command: bash -c "tail -f /dev/null"
 
     chronograf:
         image: 'chronograf:latest'
