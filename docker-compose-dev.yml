@@ -15,6 +15,7 @@ services:
             - HOST=influxdb
             - UPTIME_ROBOT_KEYS=${UPTIME_ROBOT_KEYS}
             - UPTIME_API_URL=${UPTIME_API_URL}
+            - UPTIME_INTERVAL_DAYS=${UPTIME_INTERVAL_DAYS}
         depends_on:
             - influxdb
         volumes:
