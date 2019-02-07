@@ -5,23 +5,7 @@ const dateFormat = require('dateformat');
 const config = require('../config');
 const request = require('request-promise');
 const express = require('express');
-const bodyParser = require('body-parser');
 const serveIndex = require('serve-index');
-
-
-function getResults(file) {
-
-  var regex = RegExp("That's it. ([0-9]+) link[s]? in ([0-9]+) URL[s]? checked. ([0-9]+) warning[s]? found. ([0-9]+) error[s]? found.", 'g');
-
-  var values = regex.exec(file);
-
-  var links = parseInt(values[1]);
-  var errors = parseInt(values[4]);
-  var result = {};
-
-  result['uptimerobot'] = 100 - (100 * errors / links);
-  return result;
-}
 
 const getFile = async (options) => {
   options.fileName = 'uptimerobot.txt';
