@@ -7,27 +7,21 @@ const request = require('request-promise');
 const express = require('express');
 const serveIndex = require('serve-index');
 
-const getFile = async (options) => {
-  options.fileName = 'uptimerobot.txt';
-  const file = await garie_plugin.utils.helpers.getNewestFile(options);
-  return getResults(file);
-}
 
-
-const getMonitors = async () => {
+const getMonitors = async (check) => {
   return new Promise(async (resolve, reject) => {
     try {
       var date = new Date();
       date.setHours(0, 0, 0, 0);
       var end_interval = date.getTime() / 1000 | 0;
-      var start_interval = end_interval - 86400 * parseInt(process.env.UPTIME_INTERVAL_DAYS || 30);
+      var start_interval = end_interval - 86400 * parseInt(check || 30);
 
 
       const keys = process.env.UPTIME_ROBOT_KEYS;
       const uptime_monitor_url = process.env.UPTIME_API_URL;
 
       date = new Date();
-      const resultsLocation = path.join(__dirname, '../reports/', dateFormat(date, "isoUtcDateTime"), '/monitors.json');
+      const resultsLocation = path.join(__dirname, '../reports/', dateFormat(date, "isoUtcDateTime"), `/monitors_${check}.json`);
 
 
       var monitors = {};
@@ -53,7 +47,7 @@ const getMonitors = async () => {
         monitors = data['body']['monitors'].concat(monitors);
       }
       fs.outputJson(resultsLocation, monitors)
-        .then(() => console.log(`Saved uptimerobot monitors json to ${resultsLocation}`))
+        .then(() => console.log(`Saved uptimerobot monitors json for ${check} days  to ${resultsLocation}`))
         .catch(err => {
           console.log(err)
         })
@@ -71,6 +65,8 @@ const getMonitors = async () => {
 
 
 
+
+
 const getData = async (options) => {
   const {
     url
@@ -80,16 +76,31 @@ const getData = async (options) => {
 
   return new Promise(async (resolve, reject) => {
 
-    for (var i = 0; i < global.monitors.length; i++) {
+    for (var i = 0; i < global.monitors_1day.length; i++) {
 
-      var monitor = global.monitors[i];
+      var monitor = global.monitors_1day[i];
       if (monitor['url'] == url) {
 
         result['uptime'] = parseFloat(monitor['custom_uptime_ranges']);
-        console.log(`Got result ${result['uptime']} for ${url}`);
+        console.log(`Got result ${result['uptime']} for ${url} for yesterday`);
       }
 
     }
+
+
+    for (var i = 0; i < global.monitors_longer.length; i++) {
+
+      var monitor = global.monitors_longer[i];
+      if (monitor['url'] == url) {
+
+        result['uptime_score'] = parseFloat(monitor['custom_uptime_ranges']);
+        console.log(`Got result ${result['uptime_score']} for ${url} for ${process.env.UPTIME_INTERVAL_DAYS}` days);
+      }
+
+    }
+
+
+
 
     resolve(result);
 
@@ -105,7 +116,8 @@ app.use('/reports', express.static('reports'), serveIndex('reports', { icons: tr
 
 const main = async () => {
 
-  global.monitors = await getMonitors();
+  global.monitors_1day = await getMonitors(1);
+  global.monitors_longer = await getMonitors(parseInt(process.env.UPTIME_INTERVAL_DAYS));
   garie_plugin.init({
     database: "uptimerobot",
     getData: getData,
