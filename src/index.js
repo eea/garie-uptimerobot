@@ -121,7 +121,7 @@ const main = async () => {
   garie_plugin.init({
     database: "uptimerobot",
     getData: getData,
-    app_name: 'uptimerobot',
+    app_name: 'uptimerobot-results',
     app_root: path.join(__dirname, '..'),
     config: config
   });
