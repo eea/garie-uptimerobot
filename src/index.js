@@ -94,7 +94,7 @@ const getData = async (options) => {
       if (monitor['url'] == url) {
 
         result['uptime_score'] = parseFloat(monitor['custom_uptime_ranges']);
-        console.log(`Got result ${result['uptime_score']} for ${url} for ${process.env.UPTIME_INTERVAL_DAYS}` days);
+        console.log(`Got result ${result['uptime_score']} for ${url} for ${process.env.UPTIME_INTERVAL_DAYS} days`);
       }
 
     }
