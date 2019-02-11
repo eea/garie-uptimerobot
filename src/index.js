@@ -7,8 +7,7 @@ const request = require('request-promise');
 const express = require('express');
 const serveIndex = require('serve-index');
 
-
-const getMonitors = async (check) => {
+const getMonitors = async (reportDir, check) => {
   return new Promise(async (resolve, reject) => {
     try {
       var date = new Date();
@@ -20,9 +19,8 @@ const getMonitors = async (check) => {
       const keys = process.env.UPTIME_ROBOT_KEYS;
       const uptime_monitor_url = process.env.UPTIME_API_URL;
 
-      date = new Date();
-      const resultsLocation = path.join(__dirname, '../reports/', dateFormat(date, "isoUtcDateTime"), `/monitors_${check}.json`);
 
+      const resultsLocation = path.join(reportDir, `/monitors_${check}.json`);
 
       var monitors = {};
 
@@ -46,7 +44,7 @@ const getMonitors = async (check) => {
 
         monitors = data['body']['monitors'].concat(monitors);
       }
-      fs.outputJson(resultsLocation, monitors)
+      fs.outputJson(resultsLocation, monitors, {spaces: 2})
         .then(() => console.log(`Saved uptimerobot monitors json for ${check} days  to ${resultsLocation}`))
         .catch(err => {
           console.log(err)
@@ -116,8 +114,11 @@ app.use('/reports', express.static('reports'), serveIndex('reports', { icons: tr
 
 const main = async () => {
 
-  global.monitors_1day = await getMonitors(1);
-  global.monitors_longer = await getMonitors(parseInt(process.env.UPTIME_INTERVAL_DAYS));
+  date = new Date();
+  var reportDir = garie_plugin.utils.helpers.reportDir({app_name:'uptimerobot-results', url:".", app_root:path.join(__dirname, '..')});
+  reportDir = path.join(reportDir, dateFormat(date, "isoUtcDateTime"));
+  global.monitors_1day = await getMonitors(reportDir, 1);
+  global.monitors_longer = await getMonitors(reportDir, parseInt(process.env.UPTIME_INTERVAL_DAYS));
   garie_plugin.init({
     database: "uptimerobot",
     getData: getData,
