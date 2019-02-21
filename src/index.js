@@ -115,14 +115,15 @@ app.use('/reports', express.static('reports'), serveIndex('reports', { icons: tr
 const main = async () => {
 
   date = new Date();
-  var reportDir = garie_plugin.utils.helpers.reportDir({app_name:'uptimerobot-results', url:".", app_root:path.join(__dirname, '..')});
+  var reportDir = garie_plugin.utils.helpers.reportDir({report_folder_name:'uptimerobot-results', url:".", app_root:path.join(__dirname, '..')});
   reportDir = path.join(reportDir, dateFormat(date, "isoUtcDateTime"));
   global.monitors_1day = await getMonitors(reportDir, 1);
   global.monitors_longer = await getMonitors(reportDir, parseInt(process.env.UPTIME_INTERVAL_DAYS));
   garie_plugin.init({
-    database: "uptimerobot",
+    db_name: "uptimerobot",
     getData: getData,
-    app_name: 'uptimerobot-results',
+    report_folder_name: 'uptimerobot-results',
+    plugin_name: "uptimerobot",
     app_root: path.join(__dirname, '..'),
     config: config
   });

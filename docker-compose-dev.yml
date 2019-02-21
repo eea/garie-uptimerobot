@@ -21,6 +21,7 @@ services:
             - 3000:3000
         volumes:
             - ./src:/usr/src/garie-plugin/src
+            - ./config.json:/usr/src/garie-plugin/config.json:z
         command: bash -c "tail -f /dev/null"
 
     chronograf:
