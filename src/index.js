@@ -85,7 +85,6 @@ const getData = async (options) => {
     }
 
 
-console.log(
     for (var i = 0; i < global.monitors_longer.length; i++) {
 
       var monitor = global.monitors_longer[i];
