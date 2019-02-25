@@ -73,7 +73,6 @@ const getData = async (options) => {
   var result = {}
 
   return new Promise(async (resolve, reject) => {
-
     for (var i = 0; i < global.monitors_1day.length; i++) {
 
       var monitor = global.monitors_1day[i];
@@ -86,6 +85,7 @@ const getData = async (options) => {
     }
 
 
+console.log(
     for (var i = 0; i < global.monitors_longer.length; i++) {
 
       var monitor = global.monitors_longer[i];
@@ -97,9 +97,6 @@ const getData = async (options) => {
 
     }
 
-
-
-
     resolve(result);
 
   });
@@ -108,20 +105,33 @@ const getData = async (options) => {
 
 console.log("Start");
 
+const getMonitorsPrep = async (reportDir, check) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      date = new Date();
+      var reportDir = garie_plugin.utils.helpers.reportDir({report_folder_name:'uptimerobot-results', url:".", app_root:path.join(__dirname, '..')});
+      reportDir = path.join(reportDir, dateFormat(date, "isoUtcDateTime"));
+      global.monitors_1day = await getMonitors(reportDir, 1);
+      global.monitors_longer = await getMonitors(reportDir, parseInt(process.env.UPTIME_INTERVAL_DAYS));
+      resolve("processed");
+    } catch (err) {
+      console.log(err);
+      reject("reject");
+    }
+
+  });
+
+}
+
 
 const app = express();
 app.use('/reports', express.static('reports'), serveIndex('reports', { icons: true }));
 
 const main = async () => {
-
-  date = new Date();
-  var reportDir = garie_plugin.utils.helpers.reportDir({report_folder_name:'uptimerobot-results', url:".", app_root:path.join(__dirname, '..')});
-  reportDir = path.join(reportDir, dateFormat(date, "isoUtcDateTime"));
-  global.monitors_1day = await getMonitors(reportDir, 1);
-  global.monitors_longer = await getMonitors(reportDir, parseInt(process.env.UPTIME_INTERVAL_DAYS));
   garie_plugin.init({
     db_name: "uptimerobot",
     getData: getData,
+    prepDataForAllUrls: getMonitorsPrep,
     report_folder_name: 'uptimerobot-results',
     plugin_name: "uptimerobot",
     app_root: path.join(__dirname, '..'),
