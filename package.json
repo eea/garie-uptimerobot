@@ -23,7 +23,7 @@
         ""
     ],
     "dependencies": {
-        "garie-plugin": "https://github.com/eea/garie-plugin#0.0.6",
+        "garie-plugin": "https://github.com/eea/garie-plugin#0.0.7",
         "dateformat": "*",
         "request": "^2.88.0",
         "request-promise": "^4.2.2",

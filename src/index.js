@@ -127,21 +127,33 @@ const app = express();
 app.use('/reports', express.static('reports'), serveIndex('reports', { icons: true }));
 
 const main = async () => {
-  garie_plugin.init({
-    db_name: "uptimerobot",
-    getData: getData,
-    prepDataForAllUrls: getMonitorsPrep,
-    report_folder_name: 'uptimerobot-results',
-    plugin_name: "uptimerobot",
-    app_root: path.join(__dirname, '..'),
-    config: config
+  return new Promise(async (resolve, reject) => {
+    try{
+      garie_plugin.init({
+        db_name: "uptimerobot",
+        getData: getData,
+        prepDataForAllUrls: getMonitorsPrep,
+        report_folder_name: 'uptimerobot-results',
+        plugin_name: "uptimerobot",
+        app_root: path.join(__dirname, '..'),
+        config: config
+      });
+    }
+    catch(err){
+      reject(err);
+    }
   });
-
 }
 
 if (process.env.ENV !== 'test') {
-  app.listen(3000, async () => {
+  const server = app.listen(3000, async () => {
     console.log('Application listening on port 3000');
-    await main();
+    try{
+      await main();
+    }
+    catch(err){
+      console.log(err);
+      server.close();
+    }
   });
 }
