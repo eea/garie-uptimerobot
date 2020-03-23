@@ -4,8 +4,6 @@ const fs = require('fs-extra');
 const dateFormat = require('dateformat');
 const config = require('../config');
 const request = require('request-promise');
-const express = require('express');
-const serveIndex = require('serve-index');
 
 const getMonitors = async (reportDir, check) => {
   return new Promise(async (resolve, reject) => {
@@ -123,37 +121,27 @@ const getMonitorsPrep = async (reportDir, check) => {
 }
 
 
-const app = express();
-app.use('/reports', express.static('reports'), serveIndex('reports', { icons: true }));
-
 const main = async () => {
-  return new Promise(async (resolve, reject) => {
-    try{
-      await garie_plugin.init({
-        db_name: "uptimerobot",
-        getData: getData,
-        prepDataForAllUrls: getMonitorsPrep,
-        report_folder_name: 'uptimerobot-results',
-        plugin_name: "uptimerobot",
-        app_root: path.join(__dirname, '..'),
-        config: config
-      });
-    }
-    catch(err){
-      reject(err);
-    }
-  });
+  try{
+    const { app } = await garie_plugin.init({
+      db_name: "uptimerobot",
+      getData: getData,
+      prepDataForAllUrls: getMonitorsPrep,
+      report_folder_name: 'uptimerobot-results',
+      plugin_name: "uptimerobot",
+      app_root: path.join(__dirname, '..'),
+      config: config,
+      onDemand: true
+    });
+    app.listen(3000, () => {
+      console.log('Application listening on port 3000');
+    });
+  }
+  catch(err){
+    console.log(err);
+  }
 }
 
 if (process.env.ENV !== 'test') {
-  const server = app.listen(3000, async () => {
-    console.log('Application listening on port 3000');
-    try{
-      await main();
-    }
-    catch(err){
-      console.log(err);
-      server.close();
-    }
-  });
+  main();
 }
