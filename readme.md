@@ -77,6 +77,7 @@ On start garie-uptimerobot will start to gather statistics for the websites adde
 | `plugins.uptimerobot.retry.after`   | `number` (optional, default 30) | Minutes before we retry to execute the tasks |
 | `plugins.uptimerobot.retry.times`   | `number` (optional, default 3) | How many time to retry to execute the failed tasks |
 | `plugins.uptimerobot.retry.timeRange`   | `number` (optional, default 360) | Period in minutes to be checked in influx, to know if a task failed |
+| `plugins.uptimerobot.max_age_of_report_files`   | `number` (optional, default 365) | Maximum age (in days) for all the files. Any older file will be deleted. |
 | `plugins.uptimerobot.delete_files_by_type`   | `object` (optional, no default) | Configuration for deletion of custom files. (e.g. mp4 files)  |
 | `plugins.uptimerobot.delete_files_by_type.type`   | `string` (required for 'delete_files_by_type') | The type / extension of the files we want to delete. (e.g. "mp4"). |
 | `plugins.uptimerobot.delete_files_by_type.age`   | `number` (required for 'delete_files_by_type') | Maximum age (in days) of the custom files. Any older file will be deleted. |
