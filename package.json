@@ -1,6 +1,6 @@
 {
     "name": "garie-uptimerobot",
-    "version": "1.1.6",
+    "version": "1.1.7",
     "description": "Garie plugin for uptimerobot",
     "license": "MIT",
     "repository": "eea/garie-uptimerobot",
@@ -25,7 +25,7 @@
     "dependencies": {
         "dateformat": "*",
         "fs-extra": "^7.0.0",
-        "garie-plugin": "https://github.com/eea/garie-plugin#0.0.43",
+        "garie-plugin": "https://github.com/eea/garie-plugin#0.0.45",
         "request": "^2.88.0",
         "request-promise": "^4.2.2"
     }
